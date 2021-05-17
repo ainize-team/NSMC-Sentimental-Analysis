@@ -1,3 +1,4 @@
+import os
 import argparse
 import logging
 
@@ -9,6 +10,7 @@ from PLModels import KoBERT
 
 
 def get_parser():
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     parser = argparse.ArgumentParser(description='Fine Tune KoBART for Naver Movie Review Sentiment Analysis')
     parser.add_argument('--train_data_path',
                         default='./nsmc/ratings_train.txt',
@@ -24,7 +26,7 @@ def get_parser():
                         type=int,
                         help='')
     parser.add_argument('--model_path',
-                        default='kykim/bert-kor-base',
+                        default='monologg/kobert',
                         help='')
     parser.add_argument('--batch_size',
                         default=16,
