@@ -44,6 +44,9 @@ def get_parser():
                         type=float,
                         default=0.1,
                         help='warmup ratio')
+    parser.add_argument('--fp16',
+                        action='store_true',
+                        help='16-bit precision')
     return parser
 
 
