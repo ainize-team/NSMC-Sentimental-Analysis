@@ -26,7 +26,7 @@ def get_parser():
                         type=int,
                         help='')
     parser.add_argument('--model_path',
-                        default='monologg/kobert',
+                        default='beomi/kcbert-base',
                         help='')
     parser.add_argument('--batch_size',
                         default=16,
@@ -38,11 +38,11 @@ def get_parser():
                         help='how many subprocesses to use for data loading')
     parser.add_argument('--lr',
                         type=float,
-                        default=5e-5,
+                        default=5e-6,
                         help='The initial learning rate')
     parser.add_argument('--warmup_ratio',
                         type=float,
-                        default=0.1,
+                        default=0.0,
                         help='warmup ratio')
     parser.add_argument('--fp16',
                         action='store_true',
