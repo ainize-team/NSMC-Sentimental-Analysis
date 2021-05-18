@@ -1,4 +1,4 @@
-FROM pytorchlightning/pytorch_lightning:base-cuda-py3.8-torch1.8
+FROM 1.8.1-cuda11.1-cudnn8-runtime
 
 WORKDIR /app
 
