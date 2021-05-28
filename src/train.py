@@ -48,14 +48,14 @@ def train(model, train_dataloader, train_sampler, device, is_master, args):
                     input_ids=b_input_ids,
                     labels=b_labels
                 )
-                loss, logits = outputs['loss'], outputs['logits'] if isinstance(outputs, dict) else outputs[0], outputs[
-                    1]
+                loss, logits = (outputs['loss'], outputs['logits']) if isinstance(outputs, dict) else (
+                outputs[0], outputs[1])
 
                 loss.backward()
                 optimizer.step()
                 scheduler.step()
 
-                preds = np.argmax(logits.detach().cpu().numpy())
+                preds = logits.detach().argmax(dim=-1).cpu().numpy()
                 out_label_ids = b_labels.detach().cpu().numpy()
 
                 if is_master:
