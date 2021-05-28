@@ -66,7 +66,7 @@ def train(model, train_dataloader, train_sampler, device, is_master, args):
 
                     if args.verbose:
                         t.set_postfix(loss='{:.6f}'.format(batch_loss),
-                                      accuracy='{:.2f}'.format(accuracy_score(out_label_ids, preds)))
+                                      accuracy='{:.2f}'.format(accuracy_score(out_label_ids, preds) * 100))
                         t.update(1)
                 del b_input_ids
                 del outputs
