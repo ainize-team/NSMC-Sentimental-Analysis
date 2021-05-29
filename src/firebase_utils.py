@@ -49,6 +49,7 @@ def download_data():
     df['document'] = document_list
     df['label'] = label_list
     print(f'Data Load : {len(document_list)}')
+    print(f'Positive : {sum(label_list)}, Negative : {len(document_list) - sum(label_list)}')
     return df
 
 
