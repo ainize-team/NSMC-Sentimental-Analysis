@@ -36,14 +36,15 @@ def download_data():
     data = ref.get()
     document_list = []
     label_list = []
-
+    # 전처리된 데이터가 있으며, text가 있는 경우
     for key, value in data['raw'].items():
-        if value['score'] > 8 and key in data['preprocessed']:
-            document_list.append(data['preprocessed'][key])
-            label_list.append(1)
-        elif value['score'] < 5 and key in data['preprocessed']:
-            document_list.append(data['preprocessed'][key])
-            label_list.append(0)
+        if key in data['preprocessed'] and len(data['preprocessed']) > 0:
+            if value['score'] > 8:
+                document_list.append(data['preprocessed'][key])
+                label_list.append(1)
+            elif value['score'] < 5:
+                document_list.append(data['preprocessed'][key])
+                label_list.append(0)
     df = pd.DataFrame()
     df['document'] = document_list
     df['label'] = label_list
