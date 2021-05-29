@@ -11,6 +11,12 @@ MODEL_FILE_LIST = [
     'config.json',
 ]
 
+def init_firebase():
+    cred = credentials.Certificate("keys/mlops-crawler-firebase.json")
+    with open('keys/firebase-config.json') as f:
+        data = json.load(f)
+        firebase_admin.initialize_app(cred, data)
+
 
 def download_model(args):
 
