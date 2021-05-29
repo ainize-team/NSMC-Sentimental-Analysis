@@ -111,8 +111,8 @@ def train_single(args):
     # device 를 할당 한다.
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     # Model 과 Tokenizer를 불러온다.
-    model = MODEL_FOR_SEQUENCE_CLASSIFICATION[args.model_type].from_pretrained(args.model_name_or_path)
-    tokenizer = TOKENIZER_CLASSES[args.model_type].from_pretrained(args.model_name_or_path)
+    model = MODEL_FOR_SEQUENCE_CLASSIFICATION[args.model_type].from_pretrained('./model')
+    tokenizer = TOKENIZER_CLASSES[args.model_type].from_pretrained('./model')
     # Dataset 을 만든다.
     train_dataset = NSMCDataset(args.train_df, tokenizer, args.max_seq_len)
     tokenizer.save_pretrained('./output_dir', legacy_format=False)
@@ -152,7 +152,7 @@ def main():
     # 학습을 시작 한다.
     train_single(args)
     # 학습 완료된 모델을 업로드 한다.
-    upload_model()
+    upload_model(args)
 
 
 if __name__ == '__main__':

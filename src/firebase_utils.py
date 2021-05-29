@@ -18,6 +18,7 @@ def init_firebase():
     with open('keys/firebase-config.json') as f:
         data = json.load(f)
         firebase_admin.initialize_app(cred, data)
+    print('Initialize Firebase')
 
 
 def download_model(args):
@@ -27,6 +28,7 @@ def download_model(args):
     for file_name in MODEL_FILE_LIST:
         bucket.blob(f'model/{args.model_name}/{args.model_version}/{file_name}'). \
             download_to_filename(f'./model/{file_name}')
+    print(f'Download {args.model_name} Version {args.model_version}')
 
 
 def download_data():
@@ -34,16 +36,18 @@ def download_data():
     data = ref.get()
     document_list = []
     label_list = []
-    for key, value in data['raw']:
-        if value['score'] > 8:
+
+    for key, value in data['raw'].items():
+        if value['score'] > 8 and key in data['preprocessed']:
             document_list.append(data['preprocessed'][key])
             label_list.append(1)
-        elif value['score'] < 5:
+        elif value['score'] < 5 and key in data['preprocessed']:
             document_list.append(data['preprocessed'][key])
             label_list.append(0)
     df = pd.DataFrame()
     df['document'] = document_list
     df['label'] = label_list
+    print(f'Data Load : {len(document_list)}')
     return df
 
 
@@ -52,3 +56,4 @@ def upload_model(args):
     for file_name in MODEL_FILE_LIST:
         bucket.blob(f'model/{args.model_name}/{args.output_version}/{file_name}'). \
             upload_from_filename(f'./output/{file_name}')
+    print(f'Upload Model at {args.model_name} Version {args.output_version}')
