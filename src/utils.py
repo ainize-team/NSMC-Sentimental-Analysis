@@ -1,9 +1,8 @@
 import random
+
 import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
-import pandas as pd
-
 # Models
 from transformers import (
     BertForSequenceClassification,  # beomi/kcbert-large

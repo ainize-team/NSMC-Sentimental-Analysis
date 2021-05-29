@@ -1,8 +1,9 @@
-import os
 import json
+import os
+
 import firebase_admin
-from firebase_admin import credentials, db, storage
 import pandas as pd
+from firebase_admin import credentials, db, storage
 
 MODEL_FILE_LIST = [
     'tokenizer.json',
@@ -10,6 +11,7 @@ MODEL_FILE_LIST = [
     'pytorch_model.bin',
     'config.json',
 ]
+
 
 def init_firebase():
     cred = credentials.Certificate("keys/mlops-crawler-firebase.json")
@@ -19,7 +21,6 @@ def init_firebase():
 
 
 def download_model(args):
-
     bucket = storage.bucket()
     if not os.path.exists('./model'):
         os.makedirs('./model')
@@ -49,5 +50,5 @@ def download_data():
 def upload_model(args):
     bucket = storage.bucket()
     for file_name in MODEL_FILE_LIST:
-        bucket.blob(f'model/{args.model_name}/{args.output_version}/{file_name}').\
+        bucket.blob(f'model/{args.model_name}/{args.output_version}/{file_name}'). \
             upload_from_filename(f'./output/{file_name}')
