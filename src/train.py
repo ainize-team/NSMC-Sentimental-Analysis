@@ -29,33 +29,34 @@ def get_args():
     parser.add_argument('--max_seq_len',
                         default=128,
                         type=int,
-                        help='')
+                        help='maximum sequence length ( token )')
     parser.add_argument('--num_train_epochs',
                         default=10,
                         type=int,
-                        help='')
+                        help='number of train epochs')
     parser.add_argument('--warmup_proportion',
                         default=0.0,
                         type=float,
-                        help='')
+                        help='warmup proportion')
     parser.add_argument('--learning_rate',
                         default=5e-5,
                         type=float,
-                        help='')
+                        help='learning rate')
     parser.add_argument('--seed',
                         default=42,
                         type=int,
-                        help='', )
+                        help='random seed')
     parser.add_argument('--batch_size',
                         default=32,
                         type=int,
-                        help='')
+                        help='number of batch size')
     parser.add_argument('--verbose',
                         action='store_true',
                         help='if value is passed, showing progress bar for each epoch')
     parser.add_argument('--output_version',
                         default=f'{now.year}_{now.month}_{now.day}',
-                        type=str)
+                        type=str,
+                        help='version of output model')
     return parser.parse_args()
 
 
