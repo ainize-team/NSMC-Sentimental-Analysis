@@ -21,14 +21,14 @@ def init_firebase():
     print('Initialize Firebase')
 
 
-def download_model(args):
+def download_model(model_name, model_version):
     bucket = storage.bucket()
     if not os.path.exists('./model'):
         os.makedirs('./model')
     for file_name in MODEL_FILE_LIST:
-        bucket.blob(f'model/{args.model_name}/{args.model_version}/{file_name}'). \
+        bucket.blob(f'model/{model_name}/{model_version}/{file_name}'). \
             download_to_filename(f'./model/{file_name}')
-    print(f'Download {args.model_name} Version {args.model_version}')
+    print(f'Download {model_name} Version {model_version}')
 
 
 def download_data():
@@ -53,9 +53,13 @@ def download_data():
     return df
 
 
-def upload_model(args):
+def upload_model(model_name, output_version):
     bucket = storage.bucket()
     for file_name in MODEL_FILE_LIST:
-        bucket.blob(f'model/{args.model_name}/{args.output_version}/{file_name}'). \
+        bucket.blob(f'model/{model_name}/{output_version}/{file_name}'). \
             upload_from_filename(f'./output/{file_name}')
-    print(f'Upload Model at {args.model_name} Version {args.output_version}')
+    print(f'Upload Model at {model_name} Version {output_version}')
+
+
+def get_train_tasks():
+    return db.reference('trainTask').get()
