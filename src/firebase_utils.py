@@ -63,3 +63,7 @@ def upload_model(model_name, output_version):
 
 def get_train_tasks():
     return db.reference('trainTask').get()
+
+
+def delete_train_tasks(key):
+    db.reference(f'trainTask/{key}').delete()

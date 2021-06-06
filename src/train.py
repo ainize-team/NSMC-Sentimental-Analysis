@@ -5,7 +5,8 @@ import torch
 from tqdm import tqdm
 from transformers import AdamW, get_linear_schedule_with_warmup
 
-from firebase_utils import init_firebase, download_model, download_data, upload_model, get_train_tasks
+from firebase_utils import init_firebase, download_model, download_data, upload_model, get_train_tasks, \
+    delete_train_tasks
 from utils import MODEL_FOR_SEQUENCE_CLASSIFICATION, TOKENIZER_CLASSES
 from utils import NSMCDataset, get_dataloader, set_seed, accuracy_score
 
@@ -46,7 +47,6 @@ def train(model, train_dataloader, num_train_epochs, learning_rate, warmup_propo
 
                 total += len(b_input_ids)
                 total_loss += batch_loss
-
 
                 t.set_postfix(loss='{:.6f}'.format(batch_loss),
                               accuracy='{:.2f}'.format(accuracy_score(out_label_ids, preds) * 100))
@@ -94,28 +94,38 @@ def main():
     while True:
         train_tasks = get_train_tasks()
         if train_tasks:
-            for _, value in train_tasks.items():
-                # Random Seed를 설정 해준다. => 재현을 위해
-                set_seed(value.get('seed', 42))
-                # 초기 모델을 다운로드 받는다.
-                download_model(value['modelName'], value['modelVersion'])
-                # 데이터를 다운로드 받는다.
-                train_df = download_data()
-                # 학습을 시작 한다.
-                train_single(
-                    value['modelType'],
-                    train_df,
-                    value['maxSeqLen'],
-                    value['batchSize'],
-                    value['numTrainEpochs'],
-                    value['learningRate'],
-                    value['warmupProportion']
-                )
-                # 학습 완료된 모델을 업로드 한다.
-                upload_model(value['modelName'], value['outputVersion'])
+            for key, value in train_tasks.items():
+                try:
+                    print(f'Train Task {key}')
+                    print('Train Args')
+                    print(value)
+                    # Random Seed를 설정 해준다. => 재현을 위해
+                    set_seed(value.get('seed', 42))
+                    # 초기 모델을 다운로드 받는다.
+                    download_model(value['modelName'], value['modelVersion'])
+                    # 데이터를 다운로드 받는다.
+                    train_df = download_data()
+                    # 학습을 시작 한다.
+                    train_single(
+                        value['modelType'],
+                        train_df,
+                        value['maxSeqLen'],
+                        value['batchSize'],
+                        value['numTrainEpochs'],
+                        value['learningRate'],
+                        value['warmupProportion']
+                    )
+                    # 학습 완료된 모델을 업로드 한다.
+                    upload_model(value['modelName'], value['outputVersion'])
+                except Exception as e:
+                    print('Error :', e)
+                finally:
+                    delete_train_tasks(key)
         else:
+            print('There are no train tasks')
             # 60초간 대기
             time.sleep(60)
+
 
 if __name__ == '__main__':
     main()
