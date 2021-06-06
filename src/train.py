@@ -109,11 +109,11 @@ def main():
                     train_single(
                         value['modelType'],
                         train_df,
-                        value['maxSeqLen'],
-                        value['batchSize'],
-                        value['numTrainEpochs'],
-                        value['learningRate'],
-                        value['warmupProportion']
+                        value.get('maxSeqLen', 128),
+                        value.get('batchSize', 32),
+                        value.get('numTrainEpochs', 10),
+                        value.get('learningRate', 5e-5),
+                        value.get('warmupProportion', 0.0),
                     )
                     # 학습 완료된 모델을 업로드 한다.
                     upload_model(value['modelName'], value['outputVersion'])
