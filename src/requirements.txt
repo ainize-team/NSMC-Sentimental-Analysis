@@ -1,0 +1,4 @@
+transformers==4.6.1
+pandas==1.2.4
+firebase-admin==5.0.0
+google-cloud-storage==1.38.0
