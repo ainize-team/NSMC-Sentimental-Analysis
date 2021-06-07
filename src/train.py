@@ -140,15 +140,19 @@ def main():
                         value['modelType'],
                         train_df,
                         validation_df,
-                        value.get('maxSeqLen', 128),
-                        value.get('batchSize', 32),
-                        value.get('numTrainEpochs', 10),
-                        value.get('learningRate', 5e-5),
-                        value.get('warmupProportion', 0.0),
+                        value['maxSeqLen'],
+                        value['batchSize'],
+                        value['numTrainEpochs'],
+                        value['learningRate'],
+                        value['warmupProportion'],
                     )
+                    value['validationLoss'] = val_loss
+                    value['validationAccuracy'] = val_acc
+                    # 학습에 사용한 파라메터와 성능을 저장 한다.
+                    upload_result(value)
                     # 학습 완료된 모델을 업로드 한다.
                     upload_model(value['modelName'], value['outputVersion'])
-                    upload_result(value, val_loss, val_acc)
+                    
                 except Exception as e:
                     print('Error :', e)
                 finally:

@@ -83,15 +83,7 @@ def delete_train_tasks(key):
 def upload_result(value, val_loss, val_acc):
     bucket = storage.bucket()
     with open('result.json','w') as f:
-        json.dump({
-            'maxSeqLen': value.get('maxSeqLen', 128),
-            'batchSize': value.get('batchSize', 32),
-            'numTrainEpochs': value.get('numTrainEpochs', 10),
-            'learningRate': value.get('learningRate', 5e-5),
-            'warmupProportion': value.get('warmupProportion', 0.0),
-            'validationLoss': val_loss,
-            'validationAccuracy': val_acc,
-        }, f, indent=2, ensure_ascii=False)
+        json.dump(value, f, indent=2, ensure_ascii=False)
     bucket.blob(f'model/{value["modelName"]}/{value["outputVersion"]}/result.json'). \
         upload_from_filename('result.json')
     print(f'Upload Result at {value["modelName"]} Version {value["outputVersion"]}')
