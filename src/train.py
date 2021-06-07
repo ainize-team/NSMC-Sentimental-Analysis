@@ -67,6 +67,7 @@ def evaluate(model, val_dataloader):
             b_labels = batch[1].to(device, non_blocking=True)
             outputs = model(
                 input_ids=b_input_ids,
+                labels=b_labels,
             )
             loss, logits = (outputs['loss'], outputs['logits']) if isinstance(outputs, dict) else (
                 outputs[0], outputs[1])
