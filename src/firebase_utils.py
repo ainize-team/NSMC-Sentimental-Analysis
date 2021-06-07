@@ -45,12 +45,23 @@ def download_data():
             elif value['score'] < 5:
                 document_list.append(data['preprocessed'][key])
                 label_list.append(0)
-    df = pd.DataFrame()
-    df['document'] = document_list
-    df['label'] = label_list
+
+    train_df = pd.DataFrame()
+    train_df['document'] = document_list
+    train_df['label'] = label_list
     print(f'Data Load : {len(document_list)}')
     print(f'Positive : {sum(label_list)}, Negative : {len(document_list) - sum(label_list)}')
-    return df
+
+    val_document_list = []
+    val_label_list = []
+    for key, value in data['validationData'].items():
+        val_document_list.append(value['text'])
+        val_label_list.append(value['label'])
+
+    val_df = pd.DataFrame()
+    val_df['document'] = val_document_list
+    val_df['label'] = val_label_list
+    return train_df, val_df
 
 
 def upload_model(model_name, output_version):
@@ -67,3 +78,20 @@ def get_train_tasks():
 
 def delete_train_tasks(key):
     db.reference(f'trainTask/{key}').delete()
+
+
+def upload_result(value, val_loss, val_acc):
+    bucket = storage.bucket()
+    with open('result.json','w') as f:
+        json.dump({
+            'maxSeqLen': value.get('maxSeqLen', 128),
+            'batchSize': value.get('batchSize', 32),
+            'numTrainEpochs': value.get('numTrainEpochs', 10),
+            'learningRate': value.get('learningRate', 5e-5),
+            'warmupProportion': value.get('warmupProportion', 0.0),
+            'validationLoss': val_loss,
+            'validationAccuracy': val_acc,
+        }, f, indent=2, ensure_ascii=False)
+    bucket.blob(f'model/{value["modelName"]}/{value["outputVersion"]}/result.json'). \
+        upload_from_filename('result.json')
+    print(f'Upload Result at {value["modelName"]} Version {value["outputVersion"]}')
