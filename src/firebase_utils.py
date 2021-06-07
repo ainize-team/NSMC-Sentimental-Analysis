@@ -80,7 +80,7 @@ def delete_train_tasks(key):
     db.reference(f'trainTask/{key}').delete()
 
 
-def upload_result(value, val_loss, val_acc):
+def upload_result(value):
     bucket = storage.bucket()
     with open('result.json','w') as f:
         json.dump(value, f, indent=2, ensure_ascii=False)

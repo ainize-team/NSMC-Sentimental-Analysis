@@ -148,6 +148,7 @@ def main():
                     )
                     value['validationLoss'] = val_loss
                     value['validationAccuracy'] = val_acc
+                    print(f'Validation Result Loss : {val_loss} Acc : {val_acc}')
                     # 학습에 사용한 파라메터와 성능을 저장 한다.
                     upload_result(value)
                     # 학습 완료된 모델을 업로드 한다.
